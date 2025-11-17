@@ -1,6 +1,8 @@
 # Projeto 2 da Disciplina: Fundamentos de Computação Concorrente, Paralela e Distribuída.
 Prof: Jorge Soares de Farias Júnior
+
 Aluna: Priscila Maciel de Lima
+
 Turma: ASD20252_4A
 
 
