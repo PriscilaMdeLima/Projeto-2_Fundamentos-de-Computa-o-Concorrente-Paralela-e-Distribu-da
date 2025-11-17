@@ -183,10 +183,6 @@ Este projeto demonstra:
 * Microsserviços simples (cliente/servidor)
 * Uso de um único Dockerfile para múltiplas funções
 
-Ideal para estudos, entrevistas técnicas ou aulas de Docker.
 
 ---
 
-# 📌 Autor
-
-Projeto criado para demonstração e estudos – personalize como quiser.
