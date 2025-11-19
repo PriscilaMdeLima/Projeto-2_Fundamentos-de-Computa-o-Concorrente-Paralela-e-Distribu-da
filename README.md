@@ -6,183 +6,92 @@ Aluna: Priscila Maciel de Lima
 Turma: ASD20252_4A
 
 
-# Desafio 1: Comunicação entre Dois Containers Docker usando Rede Customizada
+# Projeto de Microsserviços: Coleção de Desafios de Arquitetura
 
-## 📌 Descrição Geral
+Este repositório contém uma coleção de projetos de exemplo, estruturados como "desafios", focados na exploração de conceitos e padrões de **microsserviços** e **conteinerização** utilizando Docker e Docker Compose.
 
-Este projeto demonstra, de forma **simples e didática**, como criar **dois containers Docker** a partir de uma **única imagem**, que se comunicam através de uma **rede Docker customizada**:
+Devido à ausência de conteúdo nos arquivos de código e configuração, a documentação a seguir é baseada na **estrutura de diretórios** e no **propósito aparente** de cada módulo.
 
-* **Container Servidor (MODE=server):** expõe um servidor web Flask na porta **8080**.
-* **Container Cliente (MODE=client):** realiza requisições HTTP periódicas ao servidor usando `curl`.
+## 🚀 Estrutura do Projeto
 
-A arquitetura foi criada para ser **minimalista**, fácil de rodar e entender, ideal para estudos e demonstrações práticas.
+O projeto está organizado em cinco diretórios principais, cada um representando um desafio arquitetural distinto:
 
----
+| Diretório | Foco Principal | Descrição Aparente |
+| :--- | :--- | :--- |
+| `desafio1` | Comunicação Cliente-Servidor | Implementação básica de um serviço e um cliente em Python, conteinerizados separadamente. |
+| `desafio2` | Orquestração Simples | Configuração de um ambiente com Docker Compose para um ou mais serviços. |
+| `desafio3` | Aplicação Conteinerizada | Desenvolvimento de uma aplicação Python (com `requirements.txt`) pronta para ser conteinerizada via `Dockerfile`. |
+| `desafio4` | Interação entre Serviços | Estrutura para demonstrar a comunicação entre dois microsserviços (`service_a` e `service_b`). |
+| `desafio5` | Arquitetura Completa | Simulação de uma arquitetura de microsserviços mais complexa, incluindo um **API Gateway** e serviços de domínio (`ms_users`, `ms_orders`). |
 
-# 🏗️ Arquitetura da Solução
+## 🧩 Detalhes dos Módulos (Desafios)
 
-## 🔹 Visão Geral
+### Desafio 1: Comunicação Cliente-Servidor
 
-```
-+----------------------+         +-----------------------+
-|     CLIENTE          |  --->   |       SERVIDOR        |
-|  (curl em loop)      |         |   (Flask porta 8080)   |
-+----------------------+         +-----------------------+
-           ^                          |
-           |                          |
-           +------ Docker Network -----+
-```
+Este módulo parece focado na configuração de um sistema básico de comunicação.
 
-## 🔹 Componentes
+*   **Arquivos Chave:** `server.py`, `client.sh`, `Dockerfile.server`, `Dockerfile.client`, `docker-compose.yml`.
+*   **Conceitos:** Conteinerização de componentes distintos (cliente e servidor), definição de serviços no Docker Compose.
 
-### **1. Imagem Docker única**
+### Desafio 2: Orquestração Simples
 
-Contém tanto o servidor Python/Flask quanto o cliente curl.
-O comportamento é definido pela variável de ambiente `MODE`.
+Este módulo é um *boilerplate* para iniciar um ambiente multi-container.
 
-### **2. Container Servidor**
+*   **Arquivos Chave:** `docker-compose.yml`.
+*   **Conceitos:** Uso do Docker Compose para definir e executar aplicações multi-container.
 
-* Baseado em Python 3.10-slim
-* Executa `app.py`
-* Expõe a porta 8080
-* Recebe requisições do container cliente
+### Desafio 3: Aplicação Conteinerizada
 
-### **3. Container Cliente**
+O foco aqui é a preparação de uma aplicação para o ambiente Docker.
 
-* Executa o script `client.sh`
-* Realiza requisições HTTP a cada 5 segundos
-* Conecta no servidor usando o hostname Docker: `server`
+*   **Arquivos Chave:** `app.py`, `requirements.txt`, `Dockerfile`, `docker-compose.yml`.
+*   **Conceitos:** Gerenciamento de dependências (`requirements.txt`), criação de imagem Docker otimizada (`Dockerfile`), e orquestração da aplicação.
 
-### **4. Rede Docker Customizada**
+### Desafio 4: Interação entre Serviços
 
-* Tipo: `bridge`
-* Permite comunicação direta pelo nome do container
+Este desafio simula um cenário onde diferentes serviços precisam interagir.
 
----
+*   **Estrutura:** Contém diretórios para `service_a` e `service_b`.
+*   **Conceitos:** Descoberta de serviços, comunicação síncrona/assíncrona entre microsserviços.
 
-# 🧩 Decisões Técnicas
+### Desafio 5: Arquitetura de Microsserviços Completa
 
-* **Um único Dockerfile:** reduz complexidade e facilita manutenção.
-* **MODE=server / MODE=client:** simples chaveamento via variável de ambiente.
-* **Flask:** escolhido por ser leve e fácil de configurar.
-* **Alpine + curl:** garantindo cliente mínimo e eficiente.
-* **Rede Docker customizada:** evita problemas de DNS e isola o ambiente.
+Representa a estrutura mais complexa, típica de um sistema real de e-commerce ou similar.
 
----
+*   **Estrutura:** Contém diretórios para `gateway`, `ms_users` (microsserviço de usuários) e `ms_orders` (microsserviço de pedidos).
+*   **Conceitos:** Padrão API Gateway, separação de responsabilidades por domínio (DDD), orquestração de múltiplos microsserviços.
 
-# ⚙️ Funcionamento Detalhado
+## 🛠️ Como Executar (Instruções Genéricas)
 
-## 🔸 Fluxo Completo
+Para executar qualquer um dos desafios que utilizam Docker Compose, você precisará ter o **Docker** e o **Docker Compose** instalados em sua máquina.
 
-1. O usuário cria a imagem Docker única.
-2. É criada uma rede Docker chamada `minha-rede`.
-3. O container **servidor** sobe, escutando em `0.0.0.0:8080`.
-4. O container **cliente** sobe configurado com `MODE=client`.
-5. O cliente executa `curl http://server:8080` a cada 5 segundos.
-6. Ambos os logs podem ser observados em tempo real.
+1.  **Navegue até o diretório do desafio desejado:**
+    \`\`\`bash
+    cd projeto-microsservicos/desafioX
+    \`\`\`
+    (Substitua `desafioX` por `desafio1`, `desafio2`, etc.)
 
-## 🔸 Microsserviços
+2.  **Construa e Inicie os Serviços:**
+    Execute o comando `docker-compose up` com a flag `-d` para rodar em *background*.
 
-Apesar de simples, a arquitetura segue o princípio de microsserviços:
+    \`\`\`bash
+    docker-compose up --build -d
+    \`\`\`
 
-* Cada container tem responsabilidade única
-* Comunicação por rede interna
-* Independência entre cliente e servidor
+3.  **Verifique o Status:**
+    Confirme se os containers estão rodando.
 
----
+    \`\`\`bash
+    docker-compose ps
+    \`\`\`
 
-# 📁 Estrutura do Repositório
+4.  **Parar e Remover os Containers:**
+    Para encerrar o ambiente.
 
-```
-projeto-simples/
-│── Dockerfile
-│── app.py
-│── client.sh
-│── README.md
-```
-
----
-
-# 🚀 Como Executar o Projeto
-
-## 1️⃣ Baixe ou clone o repositório
-
-```
-git clone https://github.com/SEU_USUARIO/projeto-simples.git
-cd projeto-simples
-```
-
-## 2️⃣ Crie a imagem Docker
-
-```
-docker build -t projeto-simples .
-```
-
-## 3️⃣ Crie a rede Docker customizada
-
-```
-docker network create minha-rede
-```
-
-## 4️⃣ Inicie o Servidor Flask
-
-```
-docker run -d \
-  --name server \
-  --network minha-rede \
-  -p 8080:8080 \
-  projeto-simples
-```
-
-## 5️⃣ Inicie o Cliente Curl
-
-```
-docker run -d \
-  --name client \
-  --network minha-rede \
-  -e MODE=client \
-  projeto-simples
-```
-
----
-
-# 🧪 Testando a Comunicação
-
-### 🔹 Ver logs do servidor
-
-```
-docker logs -f server
-```
-
-Você verá requisições chegando.
-
-### 🔹 Ver logs do cliente
-
-```
-docker logs -f client
-```
-
-Você verá respostas do servidor.
-
-### 🔹 Testar pelo navegador
-
-Acesse:
-
-```
-http://localhost:8080
-```
-
----
-
-# 📄 Conclusão
-
-Este projeto demonstra:
-
-* Comunicação entre containers Docker
-* Rede customizada
-* Microsserviços simples (cliente/servidor)
-* Uso de um único Dockerfile para múltiplas funções
+    \`\`\`bash
+    docker-compose down
+    \`\`\`
 
 
----
+
 
