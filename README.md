@@ -10,7 +10,7 @@ Turma: ASD20252_4A
 
 Este repositório contém uma coleção de projetos de exemplo, estruturados como "desafios", focados na exploração de conceitos e padrões de **microsserviços** e **conteinerização** utilizando Docker e Docker Compose.
 
-Devido à ausência de conteúdo nos arquivos de código e configuração, a documentação a seguir é baseada na **estrutura de diretórios** e no **propósito aparente** de cada módulo.
+
 
 ## 🚀 Estrutura do Projeto
 
