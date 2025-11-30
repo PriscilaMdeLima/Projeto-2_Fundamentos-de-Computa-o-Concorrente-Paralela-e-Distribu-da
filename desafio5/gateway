@@ -1,0 +1,38 @@
+from flask import Flask, jsonify, request
+import requests
+import os
+
+app = Flask(__name__)
+
+# URLs dos Microsserviços (resolvidas pelo nome do serviço no Docker)
+USERS_SERVICE_URL = os.environ.get("USERS_SERVICE_URL", "http://ms_users:5003")
+ORDERS_SERVICE_URL = os.environ.get("ORDERS_SERVICE_URL", "http://ms_orders:5004")
+
+def proxy_request(service_url, path):
+    """Função genérica para fazer o proxy da requisição."""
+    url = f"{service_url}{path}"
+    print(f"Gateway: Encaminhando requisição para {url}")
+    try:
+        response = requests.get(url)
+        response.raise_for_status()
+        return response.json(), response.status_code
+    except requests.exceptions.RequestException as e:
+        print(f"Gateway: Erro ao acessar o serviço {service_url}: {e}")
+        return jsonify({"error": f"Service unavailable: {service_url}"}), 503
+
+@app.route('/users', methods=['GET'])
+def users_endpoint():
+    """Endpoint para o Microsserviço de Usuários."""
+    return proxy_request(USERS_SERVICE_URL, "/users")
+
+@app.route('/orders', methods=['GET'])
+def orders_endpoint():
+    """Endpoint para o Microsserviço de Pedidos."""
+    return proxy_request(ORDERS_SERVICE_URL, "/orders")
+
+@app.route('/')
+def status():
+    return jsonify({"status": "API Gateway is running", "endpoints": ["/users", "/orders"]})
+
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=8080)
