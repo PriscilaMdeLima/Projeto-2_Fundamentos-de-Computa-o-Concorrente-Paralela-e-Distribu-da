@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+  ms_users:
+    build:
+      context: ./ms_users
+      dockerfile: Dockerfile
+    container_name: ms_users
+    networks:
+      - gateway_net
+
+  ms_orders:
+    build:
+      context: ./ms_orders
+      dockerfile: Dockerfile
+    container_name: ms_orders
+    networks:
+      - gateway_net
+
+  gateway:
+    build:
+      context: ./gateway
+      dockerfile: Dockerfile
+    container_name: api_gateway
+    ports:
+      - "8080:8080" # Porta pública para acesso
+    environment:
+      USERS_SERVICE_URL: http://ms_users:5003
+      ORDERS_SERVICE_URL: http://ms_orders:5004
+    depends_on:
+      - ms_users
+      - ms_orders
+    networks:
+      - gateway_net
+
+networks:
+  gateway_net:
+    driver: bridge
